@@ -14,6 +14,13 @@ Pin a git tag so consuming repos do not float onto breaking preset changes.
 | [`java-remediated`](java-remediated.json) | Only bumps the Lightwell rebuild (`3.7.1.rhlw-00001` → `3.7.1.rhlw-00002`). |
 | [`java-upgrade`](java-upgrade.json) | Maven versioning, but keeps only `rhlw` artifacts. Upstream jumps are allowed (`3.7.1.rhlw-00001` → `3.18.0.rhlw-00001`). |
 | [`java-manager`](java-manager.json) | Custom manager only. Use this when the app supplies its own `packageRules`. |
+| [`python-manager`](python-manager.json) | Only pointing to Lightwell repository as rebuilds are automatically understood (e.g. request for `3.0.1` returns `3.0.1+rhlw.1`). |
+
+## Python
+
+Python does not need special logic to pick up Lightwell rebuilds. Pip and uv read `+rhlw…` as a local version, and prefer this version. Lightwell Python does not need a custom versioning rule on top of that.
+
+`==3.0.1` matches every `3.0.1+rhlw…` rebuild. Renovate keeps that pin and treats the highest rebuild as the current version, so pip and uv install it without a requirements change.
 
 ## Usage
 

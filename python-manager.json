@@ -1,0 +1,11 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "This preset only points the pypi datasource at the Lightwell index. Lightwell rebuilds are understood as local version and no custom logic is needed.",
+  "packageRules": [
+    {
+      "description": "Look up Python packages on the Lightwell remediated index",
+      "matchDatasources": ["pypi"],
+      "registryUrls": ["https://packages.redhat.com/lightwell/python/remediated/simple"]
+    }
+  ]
+}
