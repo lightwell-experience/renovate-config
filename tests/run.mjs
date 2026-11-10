@@ -88,7 +88,9 @@ function runRenovate(cwd, logFile) {
       env: {
         ...process.env,
         LOG_LEVEL: "debug",
-        RENOVATE_LOG_FILE: logFile,
+        // Renovate lowercases LOG_FILE, so pass a lowercase path relative to cwd
+        // instead of the mixed-case absolute temp dir.
+        RENOVATE_LOG_FILE: path.relative(cwd, logFile),
         RENOVATE_TOKEN: "local",
       },
       stdio: "ignore",
