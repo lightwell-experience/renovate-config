@@ -44,6 +44,27 @@
       "expect": "3.18.0.rhlw-00001"
     },
     {
+      "description": "Upgrade predisclosure novel build across upstream",
+      "current": "1.0.0.M10.rhlw-00000-n-00014",
+      "available": [
+        "1.0.0.M10.rhlw-00000-n-00014",
+        "1.0.0.M10.rhlw-00000-n-00015",
+        "1.0.0.M11.rhlw-00000-n-00001"
+      ],
+      "expect": "1.0.0.M11.rhlw-00000-n-00001"
+    },
+    {
+      "description": "Upgrade remediated rebuild across upstream",
+      "current": "10.0.0.rhlw-00003",
+      "available": [
+        "10.0.0",
+        "10.0.0.rhlw-00003",
+        "10.0.0.rhlw-00004",
+        "10.1.0.rhlw-00001"
+      ],
+      "expect": "10.1.0.rhlw-00001"
+    },
+    {
       "description": "No update when no rhlw versions exist",
       "current": "12.0.32",
       "available": [

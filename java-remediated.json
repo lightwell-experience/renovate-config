@@ -16,7 +16,7 @@
       "depNameTemplate": "{{{groupId}}}:{{{artifactId}}}",
       "datasourceTemplate": "maven",
       "registryUrlTemplate": "https://packages.redhat.com/lightwell/java/remediated",
-      "versioningTemplate": "regex:^(?<compatibility>.*?)([.-]rhlw-(?<major>\\d+)(\\.n(?<minor>\\d+))?)?$"
+      "versioningTemplate": "regex:^(?<compatibility>.*?)([.-]rhlw-(?<major>\\d+)(-n-(?<minor>\\d+))?)?$"
     }
   ],
   "packageRules": [

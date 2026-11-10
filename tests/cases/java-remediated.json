@@ -54,6 +54,38 @@
       "expect": null
     },
     {
+      "description": "Bump predisclosure novel build, not upstream",
+      "current": "1.0.0.M10.rhlw-00000-n-00014",
+      "available": [
+        "1.0.0.M10",
+        "1.0.0.M10.rhlw-00000-n-00014",
+        "1.0.0.M10.rhlw-00000-n-00015",
+        "1.0.0.M11.rhlw-00000-n-00020"
+      ],
+      "expect": "1.0.0.M10.rhlw-00000-n-00015"
+    },
+    {
+      "description": "Add predisclosure suffix on same upstream",
+      "current": "1.0.0.M10",
+      "available": [
+        "1.0.0.M10",
+        "1.0.0.M10.rhlw-00000-n-00014",
+        "1.0.0.M11.rhlw-00000-n-00001"
+      ],
+      "expect": "1.0.0.M10.rhlw-00000-n-00014"
+    },
+    {
+      "description": "Bump remediated rebuild, not upstream",
+      "current": "10.0.0.rhlw-00003",
+      "available": [
+        "10.0.0",
+        "10.0.0.rhlw-00003",
+        "10.0.0.rhlw-00004",
+        "10.1.0.rhlw-00001"
+      ],
+      "expect": "10.0.0.rhlw-00004"
+    },
+    {
       "description": "Do not downgrade",
       "current": "12.0.32",
       "available": [
