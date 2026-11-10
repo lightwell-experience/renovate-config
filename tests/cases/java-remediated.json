@@ -62,6 +62,35 @@
         "12.1.1"
       ],
       "expect": null
+    },
+    {
+      "description": "Ignore trailing .0 segments added by rebuild",
+      "current": "20220320",
+      "available": [
+        "20220320",
+        "20220320.0.0.rhlw-00001",
+        "20220320.0.0.rhlw-00003"
+      ],
+      "expect": "20220320.0.0.rhlw-00003"
+    },
+    {
+      "description": "Ignore single trailing .0 added by rebuild, not upstream",
+      "current": "1.5",
+      "available": [
+        "1.5",
+        "1.5.0.rhlw-00002",
+        "1.6.0.rhlw-00001"
+      ],
+      "expect": "1.5.0.rhlw-00002"
+    },
+    {
+      "description": "Do not treat a non-zero patch as same upstream",
+      "current": "2.13",
+      "available": [
+        "2.13",
+        "2.13.1.rhlw-00001"
+      ],
+      "expect": null
     }
   ]
 }
