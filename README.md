@@ -28,7 +28,7 @@ Add the preset to the application's `renovate.json`:
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    "github>lightwell-network/renovate-config:java-remediated#v1.0.0"
+    "github>lightwell-experience/renovate-config:java-remediated#v1.0.0"
   ],
   "hostRules": [
     {
@@ -51,7 +51,7 @@ The presets look up Maven artifacts on `https://packages.redhat.com/lightwell/ja
 
 ```json
 {
-  "extends": ["github>lightwell-network/renovate-config:java-remediated#v1.0.0"],
+  "extends": ["github>lightwell-experience/renovate-config:java-remediated#v1.0.0"],
   "hostRules": [
     {
       "matchHost": "artifactory.example.com",
