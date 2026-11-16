@@ -16,8 +16,8 @@ function usage() {
 
 Runs Maven, then Renovate, and lists rhlw updates. Uses the repo's Renovate
 config. --write writes a BOM for dependencyManagement (default: ${PINS}).
-If that file already exists, --write rewrites the dependencyManagement
-section, bumps the project version, and leaves the rest of the file unchanged.
+Pins already at an rhlw version stay while they remain in the tree. The BOM
+version bumps only when that set changes.
 
 Maven must write a JSON tree. Default:
 
@@ -179,6 +179,46 @@ function updatePinFile(xml, pins) {
   return `${head}\n    <dependencies>\n${xmlDeps(pins, "      ")}\n    </dependencies>\n  ${xml.slice(close)}`;
 }
 
+function parsePinDeps(xml) {
+  const body = xml.slice(xml.indexOf("<dependencyManagement"));
+  const deps = [];
+  const re =
+    /<dependency>\s*<groupId>([^<]+)<\/groupId>\s*<artifactId>([^<]+)<\/artifactId>\s*<version>([^<]+)<\/version>\s*<\/dependency>/g;
+  for (const match of body.matchAll(re)) {
+    const groupId = match[1].trim();
+    const artifactId = match[2].trim();
+    deps.push({ groupId, artifactId, version: match[3].trim(), name: `${groupId}:${artifactId}` });
+  }
+  return deps.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function mergePins(existing, updates, treeDeps) {
+  const inTree = new Set(treeDeps.map((dep) => dep.name));
+  const byName = new Map();
+  for (const dep of existing) {
+    if (inTree.has(dep.name)) {
+      byName.set(dep.name, dep);
+    }
+  }
+  for (const update of updates) {
+    if (!inTree.has(update.depName)) {
+      continue;
+    }
+    const [groupId, artifactId] = update.depName.split(":");
+    byName.set(update.depName, {
+      groupId,
+      artifactId,
+      version: update.newValue,
+      name: update.depName,
+    });
+  }
+  return [...byName.values()].sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function samePins(left, right) {
+  return left.length === right.length && left.every((dep, i) => dep.name === right[i].name && dep.version === right[i].version);
+}
+
 function extractUpdates(log) {
   const line = log.split("\n").find((l) => l.includes("packageFiles with updates"));
   if (!line) {
@@ -274,20 +314,19 @@ function main() {
     const transitives = updates.filter((u) => !directNames.has(u.depName)).sort(byName);
     console.log(`Resolved ${deps.length} dependencies (${directNames.size} direct)\n`);
     console.log(`${section("Direct dependencies", directs)}\n\n${section("Transitive dependencies", transitives)}`);
-    const pins = updates
-      .map((u) => {
-        const [groupId, artifactId] = u.depName.split(":");
-        return { groupId, artifactId, version: u.newValue };
-      })
-      .sort((a, b) => `${a.groupId}:${a.artifactId}`.localeCompare(`${b.groupId}:${b.artifactId}`));
+    const out = path.resolve(cwd, opts.file ?? PINS);
+    const existingXml = fs.existsSync(out) ? fs.readFileSync(out, "utf8") : "";
+    const previous = existingXml ? parsePinDeps(existingXml) : [];
+    const pins = mergePins(previous, updates, deps);
     if (opts.write) {
-      if (pins.length === 0) {
+      if (existingXml && samePins(previous, pins)) {
+        console.log("\nBOM unchanged.");
+      } else if (pins.length === 0) {
         console.log("\nNo BOM to write.");
       } else {
-        const out = path.resolve(cwd, opts.file ?? PINS);
         fs.mkdirSync(path.dirname(out), { recursive: true });
-        const existing = fs.existsSync(out) ? fs.readFileSync(out, "utf8") : "";
-        fs.writeFileSync(out, existing ? updatePinFile(existing, pins) : pinPom(pins));
+        const next = existingXml ? updatePinFile(existingXml, pins) : pinPom(pins);
+        fs.writeFileSync(out, next);
         console.log(`\nWrote ${out}`);
       }
     } else if (updates.length > 0) {
