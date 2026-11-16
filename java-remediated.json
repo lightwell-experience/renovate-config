@@ -22,7 +22,8 @@
   "packageRules": [
     {
       "matchManagers": ["custom.regex"],
-      "matchDatasources": ["maven"]
+      "matchDatasources": ["maven"],
+      "commitMessageExtra": "to {{{newVersion}}}"
     }
   ]
 }
