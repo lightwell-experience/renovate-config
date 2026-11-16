@@ -7,7 +7,8 @@ import path from "node:path";
 const RHLW = /[.-]rhlw-/;
 const TREE = "dependency-tree.json";
 const PINS = "lightwell-pins.xml";
-const DEFAULT_MVN = `mvn -B -Dstyle.color=never dependency:tree -DoutputType=json -DoutputFile=${TREE}`;
+const TREE_GOAL = "org.apache.maven.plugins:maven-dependency-plugin:3.8.1:tree";
+const DEFAULT_MVN = `mvn -B -Dstyle.color=never ${TREE_GOAL} -DoutputType=json -DoutputFile=${TREE}`;
 const DEFAULT_RENOVATE = "--platform=local --onboarding=false --dry-run=lookup";
 
 function usage() {
@@ -224,7 +225,7 @@ function main() {
     tmp = fs.mkdtempSync(path.join(os.tmpdir(), "lightwell-pin-"));
     const mvn =
       opts.mvn === DEFAULT_MVN
-        ? `mvn -B -Dstyle.color=never dependency:tree -DoutputType=json -DoutputFile=${quote(path.join(tmp, TREE))}`
+        ? `mvn -B -Dstyle.color=never ${TREE_GOAL} -DoutputType=json -DoutputFile=${quote(path.join(tmp, TREE))}`
         : opts.mvn;
     const mvnResult = sh(mvn, cwd);
     if (mvnResult.status !== 0) {

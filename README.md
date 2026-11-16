@@ -76,10 +76,10 @@ The presets look up Maven artifacts on `https://packages.redhat.com/lightwell/ja
 
 Pass `--write` to write a BOM for `dependencyManagement`. The default file is `lightwell-pins.xml` next to `pom.xml`; `--write` may take another path. A new file uses `com.lightwell:rhlw-pins:0.0.1`. If the file already exists, `--write` rewrites the `dependencyManagement` section, bumps the project version, and leaves the rest of the file unchanged.
 
-Maven must write a JSON dependency tree. Defaults:
+Maven must write a JSON dependency tree. The default uses Maven Dependency Plugin 3.8.1 so the JSON output is available even when a parent POM manages an older plugin:
 
 ```bash
-mvn -B -Dstyle.color=never dependency:tree -DoutputType=json -DoutputFile=dependency-tree.json
+mvn -B -Dstyle.color=never org.apache.maven.plugins:maven-dependency-plugin:3.8.1:tree -DoutputType=json -DoutputFile=dependency-tree.json
 renovate --platform=local --onboarding=false --dry-run=lookup
 ```
 
