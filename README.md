@@ -74,12 +74,12 @@ The presets look up Maven artifacts on `https://packages.redhat.com/lightwell/ja
 
 `scripts/pin-transitives.mjs` runs Maven, then Renovate in the current repo, using whatever `renovate.json` is already there. It lists rhlw updates (Direct and Transitive) and does not edit `pom.xml`. `--mvn` and `--renovate` each replace the whole command with one string.
 
-Pass `--write` to write a BOM for `dependencyManagement`. The default file is `lightwell-pins.xml` next to `pom.xml`; `--write` may take another path. A new file uses `com.lightwell:rhlw-pins:0.0.1`. If the file already exists, `--write` rewrites the `dependencyManagement` section, bumps the project version, and leaves the rest of the file unchanged.
+Pass `--write` to write a BOM for `dependencyManagement`. The default file is `lightwell-pins.xml` next to `pom.xml`; `--write` may take another path. A new file uses `com.lightwell:rhlw-pins:0.0.1`. Pins that are already at an rhlw version stay in the file while they remain in the tree. `--write` rewrites `dependencyManagement` and bumps the project version only when that set changes, and it leaves the rest of the file unchanged.
 
-Maven must write a JSON dependency tree. Defaults:
+Maven must write a JSON dependency tree. The default uses Maven Dependency Plugin 3.8.1 so the JSON output is available even when a parent POM manages an older plugin:
 
 ```bash
-mvn -B -Dstyle.color=never dependency:tree -DoutputType=json -DoutputFile=dependency-tree.json
+mvn -B -Dstyle.color=never org.apache.maven.plugins:maven-dependency-plugin:3.8.1:tree -DoutputType=json -DoutputFile=dependency-tree.json
 renovate --platform=local --onboarding=false --dry-run=lookup
 ```
 
